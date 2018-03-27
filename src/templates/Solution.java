@@ -23,7 +23,7 @@ public class Solution {
      *
      * @param paramStr time string in format "HH:MM"
      * @return next soonest time from permuting the parameter string
-     * 
+     *
      */
     public static String nextPermutedTimeStringHoursMins(final String paramStr) {
 
@@ -59,6 +59,16 @@ public class Solution {
         }
     }
 
+    /**
+     * make a list of permutations of a time string, only contains times found on a 24 hour clock
+     *
+     * Method permutes by shifting <-- left one index at a time.  Permutations whose hour > 23
+     * or whose minutes > 60 are not included inthe return list.
+     *
+     * @param paramStr string representing a time in format "HH:MM"
+     * @return list of any permutations derived from parameter string
+     * 
+     */
     public static List<LocalTime> createPermutedTimesList(final String paramStr) {
         String[] sa = paramStr.split("");
         //System.out.println(sa.length);
