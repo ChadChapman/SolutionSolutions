@@ -18,6 +18,27 @@ public class Solution {
 
     List<String> practiceList = new ArrayList<>();
 
+
+    public static void main(String[] args ) {
+        //examineTwoLowercaseStringsForLengthOrderPrintCased(practiceStr1, practiceStr2);
+        //getLexicographicallySmallestAndLargestSubstringOfSizeK(practiceStr3, 3);
+        //getLexicoSmallestLargestSubstringsSizeKTreeSet(practiceStr3, 3);
+        //extractPrintContentFromTags(practiceStr4);
+        //System.out.println(permuteSolution("23:59"));
+        //System.out.println();
+       // System.out.println(permuteTimeString("18:01"));
+        System.out.println(nextPermutatedTimeStringHHMM("23:11"));
+    }
+
+    public void setupSolutionClass() {
+        //set up test cases here
+        practiceList.add(practiceStr1);
+        practiceList.add(practiceStr2);
+        practiceList.add(practiceStr3);
+    }
+
+
+
     /**
      * returns soonest time from the parameter time string, on 24 hour cycle
      *
@@ -25,14 +46,14 @@ public class Solution {
      * @return next soonest time from permuting the parameter string
      *
      */
-    public static String nextPermutedTimeStringHoursMins(final String paramStr) {
+    public static String nextPermutatedTimeStringHHMM(final String paramStr) {
 
         LocalTime paramTime = LocalTime.parse(paramStr);
         LocalTime returnTime = LocalTime.parse(paramStr);
-        List<LocalTime> timeList = createPermutedTimesList(paramStr);
+        List<LocalTime> timeList = createPermutatedHHMMTimesList(paramStr);
         Collections.sort(timeList); //sorts earliest to latest
 
-        if (timeList.size() == 1) {
+        if (timeList.size() <= 1) {
 
             return paramTime.toString();
 
@@ -67,66 +88,72 @@ public class Solution {
      *
      * @param paramStr string representing a time in format "HH:MM"
      * @return list of any permutations derived from parameter string
-     * 
+     *
      */
-    public static List<LocalTime> createPermutedTimesList(final String paramStr) {
-        String[] sa = paramStr.split("");
-        //System.out.println(sa.length);
-        ArrayList<String> sl = new ArrayList<>();
-        for (String s : sa) {
-            if (!s.equals(":")) {
-                sl.add(s);
-            }
-        }
-        Integer[] intArr = new Integer[sl.size()];
-        int counter = 0;
-        for (int i = 0; i < intArr.length; ++i) {
+    public static List<LocalTime> createPermutatedHHMMTimesList(final String paramStr) {
+        StringBuilder sb = new StringBuilder();
+        //create a string of just ints, no ":" which should be at [2]
+        sb.append(paramStr.substring(0,2));
+        sb.append(paramStr.substring(3));
 
-                intArr[counter] = Integer.parseInt(sl.get(i));
-                ++counter;
-            }
-          //  sl.clear();
-        Integer[] prevArr = Arrays.copyOf(intArr, intArr.length);
-        counter = intArr.length;
-        List<LocalTime> timeList = new ArrayList<>();
-        while (counter > 0) {
-            Integer[] permuteArr = Arrays.copyOf(prevArr, prevArr.length);
-            Integer firstInt = permuteArr[0];
-            for (int i = 0; i < permuteArr.length-1; ++i){
-                permuteArr[i] = permuteArr[i+1];
-            }
-            permuteArr[permuteArr.length-1] = firstInt;
-            //System.out.println(permuteArr.length);
-            String pHour = permuteArr[0].toString() + permuteArr[1].toString();
-            String pMins = permuteArr[2].toString() + permuteArr[3].toString();
+        //create a list of all possible permutations of the string
+        List<String> permutationsList = createListOfStringsLeftShift1Permutations(sb.toString());
+
+        //iterate through the list of permutations, only add "valid" time strings
+        //to the returned list of times
+        List<LocalTime> timeList = new LinkedList<>();
+        for (String s : permutationsList) {
+            System.out.println(s);
+            String pHour = s.substring(0,2);
+            String pMins = s.substring(2);
             if (Integer.parseInt(pHour) < 24 && Integer.parseInt(pMins) < 60) {
                 timeList.add(LocalTime.of(Integer.parseInt(pHour), Integer.parseInt(pMins)));
             }
-            --counter;
-            prevArr = permuteArr;
         }
+
         return timeList;
+    }
+
+    /**
+     * makes list of all permutations of an Integer array, permuted by k indexes at a time.
+     *
+     * This method shifts all indexes <-- left by k each time, then adds those permutations to
+     * a HashSet which serves as a filter for duplicate permutations.
+     * ONLY ONE OF EACH PERMUTATION WILL BE RETURNED IN THE LIST, NO DUPLICATES!
+     *
+     * @return list of all permutations found for the parameter array, after 1 pass
+     *
+     */
+
+    private static List<String> createListOfStringsLeftShift1Permutations(final String str) {
+        //store unique permutations in a set, add param string for sure
+        Set<String> permutationsSet = new HashSet<>();
+        permutationsSet.add(str);
+
+        //turn string to array, loop through for all permutations
+        //shifts left by 1 each iteration then adds each iteration to the set
+        int counter = str.length();
+        char[] charArr = str.toCharArray();
+        while (counter > 0) {
+            char firstChar = charArr[0];
+            for (int i = 0; i < charArr.length-1; ++i) {
+
+                charArr[i] = charArr[i + 1];
+            }
+            charArr[charArr.length - 1] = firstChar;
+            permutationsSet.add(new String(charArr));
+            //System.out.println(charArr.toString());
+            --counter;
         }
-
-
-
-    public static void main(String[] args ) {
-        //examineTwoLowercaseStringsForLengthOrderPrintCased(practiceStr1, practiceStr2);
-        //getLexicographicallySmallestAndLargestSubstringOfSizeK(practiceStr3, 3);
-        //getLexicoSmallestLargestSubstringsSizeKTreeSet(practiceStr3, 3);
-        //extractPrintContentFromTags(practiceStr4);
-        //System.out.println(permuteSolution("23:59"));
-        //System.out.println();
-       // System.out.println(permuteTimeString("18:01"));
-        System.out.println(nextPermutedTimeStringHoursMins("11:00"));
+        List<String> retList = new LinkedList<>();
+        if (retList.addAll(permutationsSet)) {
+            return retList;
+        } else {
+            return Collections.EMPTY_LIST;
+        }
     }
 
-    public void setupSolutionClass() {
-        //set up test cases here
-        practiceList.add(practiceStr1);
-        practiceList.add(practiceStr2);
-        practiceList.add(practiceStr3);
-    }
+
 
     public static String permuteSolution(String S) {
         // write your code in Java SE 8
