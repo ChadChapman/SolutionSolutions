@@ -1,5 +1,7 @@
 package templates;
 
+import stringsarrays.Permutations;
+
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.TemporalAmount;
@@ -15,8 +17,49 @@ public class Solution {
     static String practiceStr3 = "welcometojava";
     static String practiceStr4 = "<h1>Nayeem loves counseling</h1>";
     static String practiceStr5 = "";
+    static int[] intArr = {5,3,5,2,3,2};
+    static int k = 3;
 
     List<String> practiceList = new ArrayList<>();
+
+    public static int countMaxUniqueValuesInSubarray(final int[] intArr, final int k) {
+        Deque<Integer> deck = new ArrayDeque<>();
+        Integer retMax = Integer.MIN_VALUE;
+        HashMap<Integer, Integer> uniquesMap = new HashMap<>();
+
+        for (int i = 0; i < intArr.length; ++i) {
+            int element = intArr[i];
+            if (i <= k) { //fill the subarray until it is up to the length we are looking for
+                deck.offerLast(element);
+                if (uniquesMap.get(element) != null) {
+                    Integer val = uniquesMap.get(element);
+                    uniquesMap.put(element, val+1);
+                } else {
+                    uniquesMap.put(element, 1);
+                  }
+            } else { //reached k, now look at all subarrays
+
+                Integer qHead = deck.removeFirst();
+                Integer newVal = uniquesMap.get(qHead);
+                if (newVal == 1) { //sentinel value signals it's unique in
+                    // the current subarray
+                    uniquesMap.remove(qHead);
+                    //uniquesMap.merge(element, 1, Integer::sum); //fancy way to say add this
+                      // element's value to the set of uniques
+                } else if (newVal > 1){ //sentinel value signals it is in the current subarray but
+                    //it is not unique, so lower the tally on it by the one removed
+                    uniquesMap.put(qHead, newVal-1);
+                } else {
+                    uniquesMap.put(element, 1);
+                }
+                deck.offerLast(element);
+
+            }
+            retMax = Math.max(retMax, uniquesMap.size());
+        }
+        System.out.println(retMax);
+        return retMax;
+    } //end cMUVIS
 
 
     public static void main(String[] args ) {
@@ -25,9 +68,10 @@ public class Solution {
         //getLexicoSmallestLargestSubstringsSizeKTreeSet(practiceStr3, 3);
         //extractPrintContentFromTags(practiceStr4);
         //System.out.println(permuteSolution("23:59"));
-        //System.out.println();
+        //System.out.println(Permutations.permutateStringWithPivot("permutate this!", 9));
        // System.out.println(permuteTimeString("18:01"));
-        System.out.println(nextPermutatedTimeStringHHMM("23:11"));
+      //  System.out.println(nextPermutatedTimeStringHHMM("23:11"));
+        countMaxUniqueValuesInSubarray(intArr, k);
     }
 
     public void setupSolutionClass() {
