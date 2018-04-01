@@ -2,6 +2,8 @@ package templates;
 
 import stringsarrays.Permutations;
 
+import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.TemporalAmount;
@@ -22,45 +24,28 @@ public class Solution {
 
     List<String> practiceList = new ArrayList<>();
 
-    public static int countMaxUniqueValuesInSubarray(final int[] intArr, final int k) {
-        Deque<Integer> deck = new ArrayDeque<>();
-        Integer retMax = Integer.MIN_VALUE;
-        HashMap<Integer, Integer> uniquesMap = new HashMap<>();
+    public static boolean canChicken(final double[] priceArr, final double target) {
+        //both parameters are in dollars
+        //use a hashset first? or an array? min heap?
+        //return when found
+        HashSet<Double> priceSet = new HashSet<>();
 
-        for (int i = 0; i < intArr.length; ++i) {
-            int element = intArr[i];
-            if (i <= k) { //fill the subarray until it is up to the length we are looking for
-                deck.offerLast(element);
-                if (uniquesMap.get(element) != null) {
-                    Integer val = uniquesMap.get(element);
-                    uniquesMap.put(element, val+1);
-                } else {
-                    uniquesMap.put(element, 1);
-                  }
-            } else { //reached k, now look at all subarrays
-
-                Integer qHead = deck.removeFirst();
-                Integer newVal = uniquesMap.get(qHead);
-                if (newVal == 1) { //sentinel value signals it's unique in
-                    // the current subarray
-                    uniquesMap.remove(qHead);
-                    //uniquesMap.merge(element, 1, Integer::sum); //fancy way to say add this
-                      // element's value to the set of uniques
-                } else if (newVal > 1){ //sentinel value signals it is in the current subarray but
-                    //it is not unique, so lower the tally on it by the one removed
-                    uniquesMap.put(qHead, newVal-1);
-                } else {
-                    uniquesMap.put(element, 1);
-                }
-                deck.offerLast(element);
-
+        for (int i = 0; i < priceArr.length; ++i) {
+            double remainder = target % intArr[i];
+            if (remainder == 0) {
+                return true;
             }
-            retMax = Math.max(retMax, uniquesMap.size());
+            if (priceSet.contains(remainder)) {
+                return true;
+            }
+            //need to recursively check it for smaller and smaller remainders
+            //are the parameter arrays sorted?
         }
-        System.out.println(retMax);
-        return retMax;
-    } //end cMUVIS
+        //NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
+        //System.out.printf("Price in USD : %s %n", currencyFormat.format(priceInUSD));
 
+        return false;
+    } //end canChicken
 
     public static void main(String[] args ) {
         //examineTwoLowercaseStringsForLengthOrderPrintCased(practiceStr1, practiceStr2);
@@ -80,6 +65,60 @@ public class Solution {
         practiceList.add(practiceStr2);
         practiceList.add(practiceStr3);
     }
+
+
+    /**
+     * count max unique items in a subarray of size k.
+     *
+     * Counts unique values in a subarray of size k of the parameter array.
+     * Uses a Deque to maintain order and a HashMap to store occurrences of a
+     * particular value in a subarray.  If the value is unique and it is removed
+     * from the Deque, then it is removed HashMap as well so the map's size can be
+     * used to count uniques.
+     *
+     * @param intArr Parent array, must be at least of size k, the other parameter
+     * @param k size of the subarray to count unique values in
+     * @return the most unique values found out of all subarrays of size k
+     */
+
+    public static int countMaxUniqueValuesInSubarray(final int[] intArr, final int k) {
+        Deque<Integer> deck = new ArrayDeque<>();
+        Integer retMax = Integer.MIN_VALUE;
+        HashMap<Integer, Integer> uniquesMap = new HashMap<>();
+
+        for (int i = 0; i < intArr.length; ++i) {
+            int element = intArr[i];
+            if (i <= k) { //fill the subarray until it is up to the length we are looking for
+                deck.offerLast(element);
+                if (uniquesMap.get(element) != null) {
+                    Integer val = uniquesMap.get(element);
+                    uniquesMap.put(element, val+1);
+                } else {
+                    uniquesMap.put(element, 1);
+                }
+            } else { //reached k, now look at all subarrays
+
+                Integer qHead = deck.removeFirst();
+                Integer newVal = uniquesMap.get(qHead);
+                if (newVal == 1) { //sentinel value signals it's unique in
+                    // the current subarray
+                    uniquesMap.remove(qHead);
+                    //uniquesMap.merge(element, 1, Integer::sum); //fancy way to say add this
+                    // element's value to the set of uniques
+                } else if (newVal > 1){ //sentinel value signals it is in the current subarray but
+                    //it is not unique, so lower the tally on it by the one removed
+                    uniquesMap.put(qHead, newVal-1);
+                } else {
+                    uniquesMap.put(element, 1);
+                }
+                deck.offerLast(element);
+
+            }
+            retMax = Math.max(retMax, uniquesMap.size());
+        }
+        System.out.println(retMax);
+        return retMax;
+    } //end cMUVIS
 
 
 
