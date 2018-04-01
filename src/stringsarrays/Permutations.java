@@ -7,6 +7,21 @@ import java.util.*;
  */
 public class Permutations {
 
+    public static String permutateStringWithPivot(final String str, final int pivot) {
+
+        if (pivot > str.length()) {
+            return "invalid pivot, string not long enough";
+        } else {
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.append(str.substring(pivot+1));
+            sb.append(str.substring(0,pivot+1));
+
+            return sb.toString();
+        }
+    }
+
     /**
      * makes list of all permutations of an Integer array, permuted by k indexes at a time.
      *
