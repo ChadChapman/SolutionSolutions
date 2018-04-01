@@ -2,6 +2,8 @@ package templates;
 
 import stringsarrays.Permutations;
 
+import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.TemporalAmount;
@@ -21,6 +23,49 @@ public class Solution {
     static int k = 3;
 
     List<String> practiceList = new ArrayList<>();
+
+    public static boolean canChicken(final double[] priceArr, final double target) {
+        //both parameters are in dollars
+        //use a hashset first? or an array? min heap?
+        //return when found
+        HashSet<Double> priceSet = new HashSet<>();
+
+        for (int i = 0; i < priceArr.length; ++i) {
+            double remainder = target % intArr[i];
+            if (remainder == 0) {
+                return true;
+            }
+            if (priceSet.contains(remainder)) {
+                return true;
+            }
+            //need to recursively check it for smaller and smaller remainders
+            //are the parameter arrays sorted?
+        }
+        //NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
+        //System.out.printf("Price in USD : %s %n", currencyFormat.format(priceInUSD));
+
+        return false;
+    } //end canChicken
+
+    public static void main(String[] args ) {
+        //examineTwoLowercaseStringsForLengthOrderPrintCased(practiceStr1, practiceStr2);
+        //getLexicographicallySmallestAndLargestSubstringOfSizeK(practiceStr3, 3);
+        //getLexicoSmallestLargestSubstringsSizeKTreeSet(practiceStr3, 3);
+        //extractPrintContentFromTags(practiceStr4);
+        //System.out.println(permuteSolution("23:59"));
+        //System.out.println(Permutations.permutateStringWithPivot("permutate this!", 9));
+       // System.out.println(permuteTimeString("18:01"));
+      //  System.out.println(nextPermutatedTimeStringHHMM("23:11"));
+        countMaxUniqueValuesInSubarray(intArr, k);
+    }
+
+    public void setupSolutionClass() {
+        //set up test cases here
+        practiceList.add(practiceStr1);
+        practiceList.add(practiceStr2);
+        practiceList.add(practiceStr3);
+    }
+
 
     /**
      * count max unique items in a subarray of size k.
@@ -50,7 +95,7 @@ public class Solution {
                     uniquesMap.put(element, val+1);
                 } else {
                     uniquesMap.put(element, 1);
-                  }
+                }
             } else { //reached k, now look at all subarrays
 
                 Integer qHead = deck.removeFirst();
@@ -59,7 +104,7 @@ public class Solution {
                     // the current subarray
                     uniquesMap.remove(qHead);
                     //uniquesMap.merge(element, 1, Integer::sum); //fancy way to say add this
-                      // element's value to the set of uniques
+                    // element's value to the set of uniques
                 } else if (newVal > 1){ //sentinel value signals it is in the current subarray but
                     //it is not unique, so lower the tally on it by the one removed
                     uniquesMap.put(qHead, newVal-1);
@@ -74,26 +119,6 @@ public class Solution {
         System.out.println(retMax);
         return retMax;
     } //end cMUVIS
-
-
-    public static void main(String[] args ) {
-        //examineTwoLowercaseStringsForLengthOrderPrintCased(practiceStr1, practiceStr2);
-        //getLexicographicallySmallestAndLargestSubstringOfSizeK(practiceStr3, 3);
-        //getLexicoSmallestLargestSubstringsSizeKTreeSet(practiceStr3, 3);
-        //extractPrintContentFromTags(practiceStr4);
-        //System.out.println(permuteSolution("23:59"));
-        //System.out.println(Permutations.permutateStringWithPivot("permutate this!", 9));
-       // System.out.println(permuteTimeString("18:01"));
-      //  System.out.println(nextPermutatedTimeStringHHMM("23:11"));
-        countMaxUniqueValuesInSubarray(intArr, k);
-    }
-
-    public void setupSolutionClass() {
-        //set up test cases here
-        practiceList.add(practiceStr1);
-        practiceList.add(practiceStr2);
-        practiceList.add(practiceStr3);
-    }
 
 
 
