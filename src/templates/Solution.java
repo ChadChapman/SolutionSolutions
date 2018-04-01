@@ -22,6 +22,20 @@ public class Solution {
 
     List<String> practiceList = new ArrayList<>();
 
+    /**
+     * count max unique items in a subarray of size k.
+     *
+     * Counts unique values in a subarray of size k of the parameter array.
+     * Uses a Deque to maintain order and a HashMap to store occurrences of a
+     * particular value in a subarray.  If the value is unique and it is removed
+     * from the Deque, then it is removed HashMap as well so the map's size can be
+     * used to count uniques.
+     *
+     * @param intArr Parent array, must be at least of size k, the other parameter
+     * @param k size of the subarray to count unique values in
+     * @return the most unique values found out of all subarrays of size k
+     */
+
     public static int countMaxUniqueValuesInSubarray(final int[] intArr, final int k) {
         Deque<Integer> deck = new ArrayDeque<>();
         Integer retMax = Integer.MIN_VALUE;
