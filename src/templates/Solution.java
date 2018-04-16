@@ -24,6 +24,8 @@ public class Solution {
 
     List<String> practiceList = new ArrayList<>();
 
+
+
     public static boolean canChicken(final double[] priceArr, final double target) {
         //both parameters are in dollars
         //use a hashset first? or an array? min heap?
@@ -56,7 +58,7 @@ public class Solution {
         //System.out.println(Permutations.permutateStringWithPivot("permutate this!", 9));
        // System.out.println(permuteTimeString("18:01"));
       //  System.out.println(nextPermutatedTimeStringHHMM("23:11"));
-        countMaxUniqueValuesInSubarray(intArr, k);
+      //  countMaxUniqueValuesInSubarray(intArr, k);
     }
 
     public void setupSolutionClass() {
